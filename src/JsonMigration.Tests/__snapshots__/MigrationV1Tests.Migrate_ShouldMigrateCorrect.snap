@@ -1,4 +1,4 @@
-﻿{
+{
   "Version": 1,
   "NumberProperty": 11,
   "StringProperty": "AAA1",
@@ -10,5 +10,10 @@
   "SubProperty": {
     "SubStringProperty": "AAA",
     "SubNumberProperty": 111
-  }
+  },
+    "DictionaryProperty": {
+        "Key1": 11,
+        "Key2": 22,
+        "Key3": 33
+    }
 }

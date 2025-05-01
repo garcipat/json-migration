@@ -9,6 +9,7 @@ public class TestJsonObject : IVersionedJsonObject
     public string StringProperty { get; set; } = string.Empty;
     public List<string> ArrayProperty { get; set; } = [];
     public TestJsonSubObject SubProperty { get; set; } = new();
+    public Dictionary<string, int> DictionaryProperty { get; set; } = new();
 }
 
 public class TestJsonSubObject

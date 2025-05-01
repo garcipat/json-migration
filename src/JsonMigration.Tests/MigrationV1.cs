@@ -14,7 +14,8 @@ internal class MigrationV1 : IJsonMigration<TestJsonObject>
         rawJson.SetProperty("ArrayProperty1", () => target.ArrayProperty);
         rawJson.SetProperty("SubProperty1", () => target.SubProperty);
         rawJson.SetProperty("SubProperty1.SubStringProperty1", () => target.SubProperty.SubStringProperty);
-              
+        rawJson.SetProperty("DictionaryProperty1", () => target.DictionaryProperty);
+
         target.Version++;
         return target;
     }

@@ -17,6 +17,12 @@ public class JsonObjectExtensionsTests
             ["SubProperty1"] = new JsonObject
             {
                 ["SubStringProperty1"] = "SubTest"
+            },
+            ["DictionaryProperty1"] = new JsonObject
+            {
+                ["Key1"] = 11,
+                ["Key2"] = 22,
+                ["Key3"] = 33
             }
         };
     }
@@ -40,6 +46,18 @@ public class JsonObjectExtensionsTests
     {
         var value = _uut.GetValueOrDefault<int[]>("ArrayProperty1");
         value.Should().BeEquivalentTo([1, 2, 3]);
+    }
+
+    [Fact]
+    public void GetValueOrDefault_ShouldGetDictionary()
+    {
+        var value = _uut.GetValueOrDefault<Dictionary<string, int>>("DictionaryProperty1");
+        value.Should().BeEquivalentTo(new Dictionary<string, int>
+        {
+            ["Key1"] = 11,
+            ["Key2"] = 22,
+            ["Key3"] = 33
+        });
     }
 
     [Fact]

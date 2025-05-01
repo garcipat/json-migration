@@ -10,5 +10,10 @@
   "SubProperty1": {
     "SubStringProperty1": "AAA",
     "SubNumberProperty": 111
+  },
+  "DictionaryProperty1": {
+    "Key1": 11,
+    "Key2": 22,
+    "Key3": 33
   }
 }
