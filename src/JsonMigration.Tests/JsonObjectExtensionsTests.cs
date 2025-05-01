@@ -9,7 +9,6 @@ public class JsonObjectExtensionsTests
 
     public JsonObjectExtensionsTests()
     {
-
         _uut = new JsonObject
         {
             ["StringProperty1"] = "Test",
@@ -20,6 +19,27 @@ public class JsonObjectExtensionsTests
                 ["SubStringProperty1"] = "SubTest"
             }
         };
+    }
+
+    [Fact]
+    public void GetValueOrDefault_ShouldGetStringValue()
+    {
+        var value = _uut.GetValueOrDefault<string>("StringProperty1");
+        value.Should().Be("Test");
+    }
+
+    [Fact]
+    public void GetValueOrDefault_SubProperty_ShouldGetStringValue()
+    {
+        var value = _uut.GetValueOrDefault<string>("SubProperty1.SubStringProperty1");
+        value.Should().Be("SubTest");
+    }
+
+    [Fact]
+    public void GetValueOrDefault_ShouldGetArrayValue()
+    {
+        var value = _uut.GetValueOrDefault<int[]>("ArrayProperty1");
+        value.Should().BeEquivalentTo([1, 2, 3]);
     }
 
     [Fact]

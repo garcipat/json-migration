@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
@@ -9,6 +8,81 @@ namespace JsonMigration;
 
 public static class JsonObjectExtensions
 {
+    public static JsonNode? GetProperty(this JsonObject json, string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentException("Path cannot be null or empty.", nameof(path));
+        }
+
+        var pathSegments = path.Split('.');
+        var targetJson = NavigateToTargetNode(json, pathSegments);
+        var finalKey = pathSegments[^1];
+        return targetJson[finalKey];
+    }
+
+    public static T? GetValueOrDefault<T>(this JsonObject json, string path, T? defaultValue = default)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentException("Path cannot be null or empty.", nameof(path));
+        }
+
+        var pathSegments = path.Split('.');
+        var targetJson = NavigateToTargetNode(json, pathSegments);
+        var finalKey = pathSegments[^1];
+
+        if (targetJson[finalKey] is JsonValue jsonValue && jsonValue.TryGetValue(out T? value))
+        {
+            // Case 1: Primitive type or directly convertible value
+            return value;
+        }
+        else if (targetJson[finalKey] is JsonObject jsonObject)
+        {
+            // Case 2: Complex type - Deserialize the JsonObject into the target type
+            if (typeof(T).IsClass)
+            {
+                return JsonSerializer.Deserialize<T>(jsonObject.ToJsonString());
+            }
+        }
+        else if (targetJson[finalKey] is JsonArray jsonArray)
+        {
+            // Case 3: Collection type - Convert JsonArray to the target collection type
+            if (typeof(T).IsArray)
+            {
+                var elementType = typeof(T).GetElementType();
+                if (elementType != null)
+                {
+                    // Create a typed array of the desired element type
+                    var array = Array.CreateInstance(elementType, jsonArray.Count);
+
+                    // Populate the typed array
+                    for (int i = 0; i < jsonArray.Count; i++)
+                    {
+                        var deserializedElement = jsonArray[i]?.Deserialize(elementType);
+                        array.SetValue(deserializedElement, i);
+                    }
+
+                    // Cast the typed array to T and return
+                    return (T)(object)array;
+                }
+            }
+            else if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
+            {
+                var elementType = typeof(T).GetGenericArguments()[0];
+                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType))!;
+                foreach (var node in jsonArray)
+                {
+                    list.Add(node.Deserialize(elementType));
+                }
+                return (T)list;
+            }
+        }
+
+        return defaultValue;
+    }
+
+
     public static void SetProperty<T>(
     this JsonObject json,
     string path,
@@ -26,55 +100,22 @@ public static class JsonObjectExtensions
         var compiled = Expression.Lambda<Func<T>>(member).Compile();
         var currentValue = compiled();
 
-        // Navigate to the target node based on the path
+        // Navigate to the target node or create it if it doesn't exist
         var pathSegments = path.Split('.');
         var targetJson = NavigateToTargetNode(json, pathSegments);
+        var finalKey = pathSegments[^1];
 
-        var finalKey = pathSegments[^1]; // The last segment is the key for the target property
+        // Use GetValueOrDefault to handle existing values
+        var existingValue = json.GetValueOrDefault<T>(path);
 
-        if (targetJson[finalKey] is JsonValue jsonValue && jsonValue.TryGetValue(out T value))
+        if (existingValue != null)
         {
-            // Case 1: Primitive type - Set the member value from JSON
-            SetMemberValue(member, rootInstance, value);
-        }
-        else if (targetJson[finalKey] is JsonObject jsonObject)
-        {
-            // Case 2: Complex type - Deserialize the JsonObject into the target type
-            if (typeof(T).IsClass)
-            {
-                var deserializedValue = JsonSerializer.Deserialize<T>(jsonObject.ToJsonString());
-                if (deserializedValue != null)
-                {
-                    SetMemberValue(member, rootInstance, deserializedValue);
-                }
-            }
-        }
-        else if (targetJson[finalKey] is JsonArray jsonArray)
-        {
-            // Case 3: Collection type - Convert JsonArray to the target collection type
-            if (typeof(T).IsArray)
-            {
-                var elementType = typeof(T).GetElementType();
-                if (elementType != null)
-                {
-                    var array = jsonArray.Select(node => node.Deserialize(elementType)).ToArray();
-                    SetMemberValue(member, rootInstance, (T)(object)array);
-                }
-            }
-            else if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
-            {
-                var elementType = typeof(T).GetGenericArguments()[0];
-                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType))!;
-                foreach (var node in jsonArray)
-                {
-                    list.Add(node.Deserialize(elementType));
-                }
-                SetMemberValue(member, rootInstance, (T)list);
-            }
+            // Set the member value from the existing JSON value
+            SetMemberValue(member, rootInstance, existingValue);
         }
         else
         {
-            // Default case: Set the JSON value from the existing member value
+            // Default case: Set the JSON value from the current member value
             targetJson[finalKey] = JsonValue.Create(currentValue);
         }
     }
