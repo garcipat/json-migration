@@ -8,6 +8,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Resources\outdated.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Moq" Version="4.20.72" />
         <PackageReference Include="AwesomeAssertions" Version="8.1.0" />
         <PackageReference Include="coverlet.collector" Version="6.0.4">
@@ -23,10 +33,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\JsonMigration\JsonMigration.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Using Include="Xunit" />
     </ItemGroup>
 
 </Project>

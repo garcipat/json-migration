@@ -9,6 +9,7 @@ public class JsonObjectExtensionsTests
 
     public JsonObjectExtensionsTests()
     {
+
         _uut = new JsonObject
         {
             ["StringProperty1"] = "Test",
@@ -35,6 +36,7 @@ public class JsonObjectExtensionsTests
     public void SetProperty_ShouldSetSubProperty()
     {
         var testJsonObject = new TestJsonObject();
+        testJsonObject.SubProperty.SubStringProperty = "DefaultValue";
 
         _uut.SetProperty("SubProperty1.SubStringProperty1", () => testJsonObject.SubProperty.SubStringProperty);
 

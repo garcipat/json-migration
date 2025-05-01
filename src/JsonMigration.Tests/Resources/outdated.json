@@ -7,7 +7,7 @@
     "B",
     "C"
   ],
-  "TestJsonSubObject1": {
+  "SubProperty1": {
     "SubStringProperty1": "AAA",
     "SubNumberProperty": 111
   }

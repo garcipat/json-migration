@@ -1,0 +1,14 @@
+﻿{
+  "Version": 1,
+  "NumberProperty": 11,
+  "StringProperty": "AAA1",
+  "ArrayProperty": [
+    "A",
+    "B",
+    "C"
+  ],
+  "SubProperty": {
+    "SubStringProperty": "AAA",
+    "SubNumberProperty": 111
+  }
+}
