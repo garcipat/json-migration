@@ -1,0 +1,14 @@
+{
+  "Version": 1,
+  "NumberProperty1": 11,
+  "StringProperty1": "AAA1",
+  "ArrayProperty1": [
+    "A",
+    "B",
+    "C"
+  ],
+  "TestJsonSubObject1": {
+    "SubStringProperty1": "AAA",
+    "SubNumberProperty": 111
+  }
+}
