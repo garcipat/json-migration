@@ -12,7 +12,6 @@ public class ServiceConfigurationTests
     {
         var services = new ServiceCollection()
             .AddLogging()
-            .AddJsonMigrations()
             .AddJsonDocument<TestJsonDocument, TestJsonObject>(jsonDoc => jsonDoc
                 .UseMigration<MigrationV1>());
 

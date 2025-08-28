@@ -46,7 +46,6 @@ You register the migration and document in your service configuration:
 ```csharp
 var services = new ServiceCollection()
   .AddLogging()
-  .AddJsonMigrations()
   .AddJsonDocument<TestJsonDocument, TestJsonObject>(jsonDoc => jsonDoc
     .UseMigration<MigrationV1>());
 ```
