@@ -63,22 +63,17 @@ public class JsonObjectExtensionsTests
     [Fact]
     public void SetProperty_ShouldSetNumberProperty()
     {
-        var testJsonObject = new TestJsonObject();
-
-        _uut.SetProperty("NumberProperty1", () => testJsonObject.NumberProperty);
-
-        testJsonObject.NumberProperty.Should().Be(42);
+        _uut.SetProperty("NumberProperty2", 123);
+        _uut["NumberProperty2"]!.GetValue<int>().Should().Be(123);
     }
 
     [Fact]
     public void SetProperty_ShouldSetSubProperty()
     {
-        var testJsonObject = new TestJsonObject();
-        testJsonObject.SubProperty.SubStringProperty = "DefaultValue";
+        _uut.SetProperty("SubProperty2.SubStringProperty2", "HelloWorld");
 
-        _uut.SetProperty("SubProperty1.SubStringProperty1", () => testJsonObject.SubProperty.SubStringProperty);
-
-        testJsonObject.SubProperty.SubStringProperty.Should().Be("SubTest");
+        var subObj = _uut["SubProperty2"] as JsonObject;
+        subObj.Should().NotBeNull();
+        subObj!["SubStringProperty2"]!.GetValue<string>().Should().Be("HelloWorld");
     }
-
 }

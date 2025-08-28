@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Nodes;
+using System.Text.Json.Nodes;
 
 namespace JsonMigration.Abstractions;
 
@@ -10,18 +10,11 @@ public interface IJsonMigration
 {
     public int Version { get; }
     Type DocumentType { get; }
-    object Migrate(JsonObject rawJson, object target);
+    JsonObject Migrate(JsonObject rawJson);
 }
 
 public interface IJsonMigration<TObject> : IJsonMigration
     where TObject: class, IVersionedJsonObject, new()
 {
     Type IJsonMigration.DocumentType => typeof(TObject);
-
-    object IJsonMigration.Migrate(JsonObject rawJson, object target)
-    {
-        return Migrate(rawJson, target as TObject ?? new TObject());
-    }
-
-    TObject Migrate(JsonObject rawJson, TObject target);
 }

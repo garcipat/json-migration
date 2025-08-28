@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Linq.Expressions;
-using System.Reflection;
+using System.Collections;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -75,6 +73,7 @@ public static class JsonObjectExtensions
                 {
                     list.Add(node.Deserialize(elementType));
                 }
+
                 return (T)list;
             }
         }
@@ -82,42 +81,54 @@ public static class JsonObjectExtensions
         return defaultValue;
     }
 
-
-    public static void SetProperty<T>(
-    this JsonObject json,
-    string path,
-    Expression<Func<T>> memberExpression)
+    // New SetProperty overload: sets value at dot-separated path
+    public static void SetProperty(this JsonObject json, string path, object? value)
     {
-        if (memberExpression.Body is not MemberExpression member)
-        {
-            throw new ArgumentException("Expression must be a member access expression.", nameof(memberExpression));
-        }
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ArgumentException("Path cannot be null or empty.", nameof(path));
 
-        // Resolve the root instance of the expression
-        var rootInstance = GetRootInstance(member);
-
-        // Compile the expression to get the current value
-        var compiled = Expression.Lambda<Func<T>>(member).Compile();
-        var currentValue = compiled();
-
-        // Navigate to the target node or create it if it doesn't exist
         var pathSegments = path.Split('.');
         var targetJson = NavigateToTargetNode(json, pathSegments);
         var finalKey = pathSegments[^1];
 
-        // Use GetValueOrDefault to handle existing values
-        var existingValue = json.GetValueOrDefault<T>(path);
+        switch (value)
+        {
+            case JsonObject or JsonArray:
+                targetJson[finalKey] = JsonNode.Parse(((JsonNode)value).ToJsonString());
+                break;
+            case JsonValue jsonValue:
+                targetJson[finalKey] = JsonValue.Create(jsonValue.GetValue<object>());
+                break;
+            case JsonNode node:
+                targetJson[finalKey] = JsonNode.Parse(node.ToJsonString());
+                break;
+            default:
+                targetJson[finalKey] = JsonValue.Create(value);
+                break;
+        }
+    }
 
-        if (existingValue != null)
+    // Helper: get value from dot-separated path (returns object?)
+    public static object? GetValueByPath(this JsonObject json, string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ArgumentException("Path cannot be null or empty.", nameof(path));
+
+        var pathSegments = path.Split('.');
+        JsonNode? current = json;
+        foreach (var segment in pathSegments)
         {
-            // Set the member value from the existing JSON value
-            SetMemberValue(member, rootInstance, existingValue);
+            if (current is JsonObject obj && obj.TryGetPropertyValue(segment, out var next))
+            {
+                current = next;
+            }
+            else
+            {
+                return null;
+            }
         }
-        else
-        {
-            // Default case: Set the JSON value from the current member value
-            targetJson[finalKey] = JsonValue.Create(currentValue);
-        }
+
+        return current;
     }
 
     private static JsonObject NavigateToTargetNode(JsonObject json, string[] pathSegments)
@@ -140,45 +151,5 @@ public static class JsonObjectExtensions
         }
 
         return current;
-    }
-
-
-    private static object? GetRootInstance(MemberExpression member)
-    {
-        // Traverse the expression tree to get the root instance
-        var objectExpression = member.Expression;
-        if (objectExpression is ConstantExpression constant)
-        {
-            return constant.Value;
-        }
-        else if (objectExpression is MemberExpression parentMember)
-        {
-            var parentInstance = GetRootInstance(parentMember);
-            return parentMember.Member switch
-            {
-                PropertyInfo property => property.GetValue(parentInstance),
-                FieldInfo field => field.GetValue(parentInstance),
-                _ => throw new InvalidOperationException("Unsupported member type.")
-            };
-        }
-
-        throw new InvalidOperationException("Unable to resolve the root instance.");
-    }
-
-    private static void SetMemberValue<T>(MemberExpression member, object? instance, T value)
-    {
-        // Set the value of the member (property or field)
-        if (member.Member is PropertyInfo property)
-        {
-            property.SetValue(instance, value);
-        }
-        else if (member.Member is FieldInfo field)
-        {
-            field.SetValue(instance, value);
-        }
-        else
-        {
-            throw new InvalidOperationException("Unsupported member type.");
-        }
     }
 }

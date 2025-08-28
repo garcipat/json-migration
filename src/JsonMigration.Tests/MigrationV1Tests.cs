@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using Snapshooter.Xunit;
@@ -12,9 +13,9 @@ public class MigrationV1Tests
         var migration = new MigrationV1();
         JsonObject rawJson = (JsonObject)JsonNode.Parse(File.ReadAllText("Resources/outdated.json"))!;
 
-        var targetObject = new TestJsonObject();
-        migration.Migrate(rawJson, targetObject);
+        var migrated = migration.Migrate(rawJson);
+        var result = migrated.Deserialize<TestJsonObject>();
 
-        targetObject.Should().MatchSnapshot();
+        result.Should().MatchSnapshot();
     }
 }

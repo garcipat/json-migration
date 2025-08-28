@@ -5,18 +5,17 @@ namespace JsonMigration.Tests;
 
 internal class MigrationV1 : IJsonMigration<TestJsonObject>
 {
-    public int Version => 1;
+    public int Version => 2;
 
-    public TestJsonObject Migrate(JsonObject rawJson, TestJsonObject target)
+    public JsonObject Migrate(JsonObject rawJson)
     {
-        rawJson.SetProperty("NumberProperty1", () => target.NumberProperty);
-        rawJson.SetProperty("StringProperty1", () => target.StringProperty);
-        rawJson.SetProperty("ArrayProperty1", () => target.ArrayProperty);
-        rawJson.SetProperty("SubProperty1", () => target.SubProperty);
-        rawJson.SetProperty("SubProperty1.SubStringProperty1", () => target.SubProperty.SubStringProperty);
-        rawJson.SetProperty("DictionaryProperty1", () => target.DictionaryProperty);
+        rawJson.SetProperty("NumberProperty", rawJson.GetValueByPath("NumberProperty1"));
+        rawJson.SetProperty("StringProperty", rawJson.GetValueByPath("StringProperty1"));
+        rawJson.SetProperty("ArrayProperty", rawJson.GetValueByPath("ArrayProperty1"));
+        rawJson.SetProperty("SubProperty", rawJson.GetValueByPath("SubProperty1"));
+        rawJson.SetProperty("SubProperty.SubStringProperty", rawJson.GetValueByPath("SubProperty1.SubStringProperty1"));
+        rawJson.SetProperty("DictionaryProperty", rawJson.GetValueByPath("DictionaryProperty1"));
 
-        target.Version++;
-        return target;
+        return rawJson;
     }
 }
