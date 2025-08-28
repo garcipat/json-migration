@@ -74,7 +74,34 @@ public class MyService
 }
 ```
 
-The migrated object will have the updated structure:
+## Example JSON Document using JsonDocumentBase
+
+Suppose you have a class inheriting from `JsonDocumentBase<T>`:
+
+```csharp
+public class TestJsonDocument : JsonDocumentBase<TestJsonObject>
+{
+    public TestJsonDocument(IEnumerable<IJsonMigration<TestJsonObject>> migrations, ILogger<TestJsonDocument> logger)
+        : base("Resources/outdated.json", new JsonSerializerOptions { WriteIndented = true }, migrations, logger)
+    {
+    }
+}
+```
+
+And the JSON file it loads (e.g., `Resources/outdated.json`):
+
+```json
+{
+  "Version": 1,
+  "NumberProperty1": 11,
+  "StringProperty1": "AAA1",
+  "ArrayProperty1": ["A", "B", "C"],
+  "SubProperty1": { "SubStringProperty1": "AAA", "SubNumberProperty": 111 },
+  "DictionaryProperty1": { "Key1": 11, "Key2": 22, "Key3": 33 }
+}
+```
+
+After loading and migration, the resulting object will have the following structure:
 
 ```json
 {
