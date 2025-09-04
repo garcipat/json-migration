@@ -14,11 +14,6 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - name: Setup dotnet 9.x.x
-              uses: actions/setup-dotnet@v4
-              with: 
-                dotnet-version: 9.x.x
-
             - name: restore
               run: dotnet restore
 
