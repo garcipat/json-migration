@@ -1,8 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 	  <AssemblyName>JsonMigration</AssemblyName>
 	  <RootNamespace>JsonMigration</RootNamespace>
+    <PackageId>JsonMigration.Net</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Patrick Garcia</Authors>
+    <Description>A library for migrating JSON data structures.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/garcipat/json-migration</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/garcipat/json-migration</PackageProjectUrl>
+    <PackageTags>json;migration;dotnet;library</PackageTags>
+    <Copyright>Copyright © Patrick Garcia 2025</Copyright>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
