@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <AssemblyName>JsonMigration</AssemblyName>
-	  <RootNamespace>JsonMigration</RootNamespace>
+	  <AssemblyName>JsonMigration.Net</AssemblyName>
+	  <RootNamespace>JsonMigrationNet</RootNamespace>
     <PackageId>JsonMigration.Net</PackageId>
     <Version>0.0.1</Version>
     <Authors>Patrick Garcia</Authors>
