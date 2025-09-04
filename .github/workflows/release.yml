@@ -1,0 +1,64 @@
+name: Release
+
+on:
+    push:
+      branches: [ "main" ]
+      tags: 
+        - "^v[0-9]+.[0-9]+.[0-9]+(-[a-z0-9]+)?$"
+
+jobs:
+    build-pack:
+        runs-on: ubuntu-latest
+        defaults:
+            run: 
+                working-directory: ./src
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup dotnet 9.x.x
+              uses: actions/setup-dotnet@v4
+              with: 
+                dotnet-version: 9.x.x
+
+            - name: restore
+              run: dotnet restore
+
+            - name: build
+              run: dotnet build -c Release  --no-restore 
+
+            - name: test
+              run: dotnet test -c Release --no-build
+
+            - name: pack
+              run: dotnet pack -c Release ./JsonMigration/JsonMigration.csproj --no-build --output ./output
+
+            - name: publish artifact
+              uses: actions/upload-artifact@v2
+              with:
+                name: package
+                path: ./output
+
+    publish-internal:
+        runs-on: ubuntu-latest
+        needs: build-pack
+
+        steps:
+          - name: download artifact
+            uses: actions/download-artifact@v2
+            with:
+              name: package
+              path: ./output
+        
+          - name: Setup dotnet 9.x.x
+            uses: actions/setup-dotnet@v4
+            with: 
+              dotnet-version: 9.x.x 
+              source-url: https://nuget.pkg.github.com/garcipat/index.json
+            env:
+              NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+          - name: Push generated package to GitHub registry
+            run: dotnet push ./output/*.nupkg --source https://nuget.pkg.github.com/garcipat/index.json --api-key ${GITHUB_TOKEN} --no-symbols
+            env:
+              GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          
