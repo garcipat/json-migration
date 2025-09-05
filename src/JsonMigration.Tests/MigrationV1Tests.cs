@@ -15,6 +15,6 @@ public class MigrationV1Tests
         var migrated = migration.Migrate(rawJson);
         var result = migrated.Deserialize<TestJsonObject>();
 
-        result.Should().MatchSnapshot();
+        result.MatchSnapshot();
     }
 }
