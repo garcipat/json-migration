@@ -75,7 +75,8 @@ jobs:
               NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
           - name: Push generated package to GitHub registry
-            run: dotnet nuget push ./output/*.nupkg --source https://nuget.pkg.github.com/garcipat/index.json --api-key ${{ env.GITHUB_TOKEN }} --skip-duplicate
+            run: |
+              dotnet nuget push ./output/*.nupkg --source https://nuget.pkg.github.com/garcipat/index.json --api-key ${{ env.GITHUB_TOKEN }} --skip-duplicate
               dotnet nuget push ./output/*.snupkg --source https://nuget.pkg.github.com/garcipat/index.json --api-key ${{ env.GITHUB_TOKEN }} --skip-duplicate
             env:
               GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
