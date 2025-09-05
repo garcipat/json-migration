@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using FluentAssertions;
 using Snapshooter.Xunit;
 
 namespace JsonMigration.Tests;

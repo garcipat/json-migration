@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Using Include="AwesomeAssertions"/>
         <Using Include="Xunit" />
     </ItemGroup>
 
@@ -36,5 +37,6 @@
     <ItemGroup>
       <ProjectReference Include="..\JsonMigration\JsonMigration.csproj" />
     </ItemGroup>
+
 
 </Project>
