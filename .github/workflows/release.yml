@@ -44,7 +44,7 @@ jobs:
               run: dotnet test -c Release --no-build
 
             - name: pack
-              run: dotnet pack -c Release ./JsonMigration/JsonMigration.csproj --no-build --output ./output -p:Version={{ env.VERSION }}
+              run: dotnet pack -c Release ./JsonMigration/JsonMigration.csproj --no-build --output ./output -p:Version=${{ env.VERSION }}
 
             - name: publish artifact
               uses: actions/upload-artifact@v4
