@@ -29,7 +29,7 @@ jobs:
               run: dotnet test -c Release --no-build
 
             - name: pack
-              run: dotnet pack -c Release ./JsonMigration/JsonMigration.csproj --no-build --output ./output
+              run: dotnet pack -c Release ./JsonMigration/JsonMigration.csproj --no-build --output ./output -p:Version={{ github.ref_name }}
 
             - name: publish artifact
               uses: actions/upload-artifact@v4
@@ -58,7 +58,7 @@ jobs:
               NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
           - name: Push generated package to GitHub registry
-            run: dotnet push ./output/*.nupkg --source https://nuget.pkg.github.com/garcipat/index.json --api-key ${GITHUB_TOKEN} --no-symbols
+            run: dotnet push ./output/*.nupkg --source https://nuget.pkg.github.com/garcipat/index.json --api-key ${GITHUB_TOKEN} --no-symbols --skip-duplicate
             env:
               GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           
