@@ -5,6 +5,8 @@ on:
         paths:
             - 'src/**'
             - '.github/**'
+    workflow_dispatch:
+
 jobs:
     build:
         runs-on: ubuntu-latest
