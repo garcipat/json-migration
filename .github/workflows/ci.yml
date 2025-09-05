@@ -27,5 +27,18 @@ jobs:
             - name: build
               run: dotnet build --no-restore
 
-            - name: test
-              run: dotnet test --no-build
+            - name: test with coverage
+              run: dotnet test JsonMigration.Tests/JsonMigration.Tests.csproj --no-build --collect:"XPlat Code Coverage"
+
+            - name: Install ReportGenerator
+              run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+            - name: Generate coverage report
+              run: |
+                reportgenerator -reports:JsonMigration.Tests/TestResults/*/coverage.cobertura.xml -targetdir:coverage-report -reporttypes:Html
+
+            - name: Upload coverage report artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: coverage-report
+                path: src/coverage-report
