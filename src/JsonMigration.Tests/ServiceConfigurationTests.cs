@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Snapshooter.Xunit;
 
@@ -24,6 +23,6 @@ public class ServiceConfigurationTests
         var jsonDoc = _provider.GetRequiredService<TestJsonDocument>();
         var content = jsonDoc.GetContent();
 
-        content.Should().MatchSnapshot();
+        content.MatchSnapshot();
     }
 }
