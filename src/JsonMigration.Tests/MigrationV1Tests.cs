@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using FluentAssertions;
 using Snapshooter.Xunit;
 
 namespace JsonMigration.Tests;
@@ -16,6 +15,6 @@ public class MigrationV1Tests
         var migrated = migration.Migrate(rawJson);
         var result = migrated.Deserialize<TestJsonObject>();
 
-        result.Should().MatchSnapshot();
+        result.MatchSnapshot();
     }
 }
