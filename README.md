@@ -1,6 +1,9 @@
 
 # JsonMigration
 
+[![Build Status](https://github.com/garcipat/json-migration/actions/workflows/ci.yml/badge.svg)](https://github.com/garcipat/json-migration/actions/workflows/ci.yml)
+[![Deployment Status](https://github.com/garcipat/json-migration/actions/workflows/release.yml/badge.svg)](https://github.com/garcipat/json-migration/actions/workflows/release.yml)
+
 JsonMigration is a .NET library for migrating JSON objects between different versions during deserialization. It allows you to define migrations that transform outdated JSON structures to the latest version, making it easy to evolve your data contracts over time.
 
 ## How it works
