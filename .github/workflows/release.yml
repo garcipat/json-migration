@@ -1,6 +1,6 @@
 name: Release
 run-name: >
-  Release ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+  Release v${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
 
 on:
     push:
@@ -46,7 +46,7 @@ jobs:
               run: dotnet test -c Release --no-build
 
             - name: pack
-              run: dotnet pack -c Release ./JsonMigration/JsonMigration.csproj --no-build --output ../output -p:Version=${{ env.VERSION }} p:SymbolPackageFormat=snupkg
+              run: dotnet pack -c Release ./JsonMigration/JsonMigration.csproj --no-build --output ../output -p:Version=${{ env.VERSION }} -p:SymbolPackageFormat=snupkg
 
             - name: publish artifact
               uses: actions/upload-artifact@v4
