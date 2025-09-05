@@ -1,6 +1,6 @@
 name: Release
 run-name: >
-  Release v${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+  Release ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
 
 on:
     push:
