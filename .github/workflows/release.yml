@@ -44,13 +44,13 @@ jobs:
               run: dotnet test -c Release --no-build
 
             - name: pack
-              run: dotnet pack -c Release ./JsonMigration/JsonMigration.csproj --no-build --output ./output -p:Version={{ github.ref_name || input.version }}
+              run: dotnet pack -c Release ./JsonMigration/JsonMigration.csproj --no-build --output ./output -p:Version={{ env.VERSION }}
 
             - name: publish artifact
               uses: actions/upload-artifact@v4
               with:
                 name: package
-                path: ./output
+                path: ./outputon
                 retention-days: 7
 
     publish-internal:
