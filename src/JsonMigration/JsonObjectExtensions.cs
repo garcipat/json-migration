@@ -2,16 +2,14 @@ using System.Collections;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace JsonMigration;
+namespace JsonMigrationNet;
 
 public static class JsonObjectExtensions
 {
     public static JsonNode? GetProperty(this JsonObject json, string path)
     {
         if (string.IsNullOrWhiteSpace(path))
-        {
             throw new ArgumentException("Path cannot be null or empty.", nameof(path));
-        }
 
         var pathSegments = path.Split('.');
         var targetJson = NavigateToTargetNode(json, pathSegments);
@@ -22,26 +20,20 @@ public static class JsonObjectExtensions
     public static T? GetValueOrDefault<T>(this JsonObject json, string path, T? defaultValue = default)
     {
         if (string.IsNullOrWhiteSpace(path))
-        {
             throw new ArgumentException("Path cannot be null or empty.", nameof(path));
-        }
 
         var pathSegments = path.Split('.');
         var targetJson = NavigateToTargetNode(json, pathSegments);
         var finalKey = pathSegments[^1];
 
         if (targetJson[finalKey] is JsonValue jsonValue && jsonValue.TryGetValue(out T? value))
-        {
             // Case 1: Primitive type or directly convertible value
             return value;
-        }
         else if (targetJson[finalKey] is JsonObject jsonObject)
         {
             // Case 2: Complex type - Deserialize the JsonObject into the target type
             if (typeof(T).IsClass)
-            {
                 return JsonSerializer.Deserialize<T>(jsonObject.ToJsonString());
-            }
         }
         else if (targetJson[finalKey] is JsonArray jsonArray)
         {
@@ -119,9 +111,7 @@ public static class JsonObjectExtensions
         foreach (var segment in pathSegments)
         {
             if (current is JsonObject obj && obj.TryGetPropertyValue(segment, out var next))
-            {
                 current = next;
-            }
             else
             {
                 return null;

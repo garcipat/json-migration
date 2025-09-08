@@ -1,4 +1,4 @@
-﻿namespace JsonMigration.Abstractions;
+namespace JsonMigrationNet.Abstractions;
 
 public interface IVersionedJsonObject
 {

@@ -1,8 +1,8 @@
-﻿using JsonMigration.Abstractions;
+using JsonMigrationNet.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace JsonMigration;
+namespace JsonMigrationNet;
 
 public class JsonMigrationBuilder<TDocument, TObject>
     where TDocument : JsonDocumentBase<TObject>

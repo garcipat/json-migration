@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using JsonMigration.Abstractions;
+using JsonMigrationNet.Abstractions;
 using Microsoft.Extensions.Logging;
 
-namespace JsonMigration;
+namespace JsonMigrationNet;
 
 public class JsonDocumentBase<TObject>
     where TObject : class, IVersionedJsonObject, new()
@@ -36,9 +36,7 @@ public class JsonDocumentBase<TObject>
         if (jsonObject.TryGetPropertyValue("Version", out var versionNode) && versionNode is JsonValue versionValue)
         {
             if (versionValue.TryGetValue<int>(out var versionInt))
-            {
                 currentVersion = versionInt;
-            }
         }
 
         var applicableMigrations = _migrations

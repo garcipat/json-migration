@@ -1,4 +1,4 @@
-using JsonMigration.Abstractions;
+using JsonMigrationNet.Abstractions;
 
 namespace JsonMigration.Tests;
 

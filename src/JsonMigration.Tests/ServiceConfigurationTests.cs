@@ -1,3 +1,4 @@
+using JsonMigrationNet;
 using Microsoft.Extensions.DependencyInjection;
 using Snapshooter.Xunit;
 

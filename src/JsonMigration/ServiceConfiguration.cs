@@ -1,7 +1,7 @@
-using JsonMigration.Abstractions;
+using JsonMigrationNet.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JsonMigration;
+namespace JsonMigrationNet;
 
 public static class ServiceConfguration
 {

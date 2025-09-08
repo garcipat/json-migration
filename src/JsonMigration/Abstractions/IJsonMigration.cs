@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
 
-namespace JsonMigration.Abstractions;
+namespace JsonMigrationNet.Abstractions;
 
 /// <summary>
 /// Intapey migration interface for dependency injection.

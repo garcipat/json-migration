@@ -1,5 +1,6 @@
 using System.Text.Json;
-using JsonMigration.Abstractions;
+using JsonMigrationNet;
+using JsonMigrationNet.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace JsonMigration.Tests;
